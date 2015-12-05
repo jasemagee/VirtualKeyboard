@@ -43,9 +43,8 @@ namespace VirtualKeybord
             {
                 return;
             }
-           
 
-            // TODO: Send key
+            keybd_event((byte)button.Content.ToString().ToCharArray()[0], 0, 0, UIntPtr.Zero);
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -62,5 +61,8 @@ namespace VirtualKeybord
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
     }
 }
