@@ -4,51 +4,47 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 
-namespace VirtualKeybord
-{
+namespace VirtualKeybord {
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
-    {
+    public partial class MainWindow : Window {
         private const int ButtonSize = 60;
 
         private const int WsExNoactivate = 0x08000000;
         private const int GwlExstyle = -20;
 
-        public MainWindow()
-        {
+        public MainWindow() {
             InitializeComponent();
 
-            for (var c = 'A'; c <= 'Z'; c++)
-            {
+            for (var c = 'A'; c <= 'Z'; c++) {
                 wrapPanel.Children.Add(new Button {Content = c, Width = ButtonSize, Height = ButtonSize});
             }
 
-            for (var i = 0; i < 9; i++)
-            {
+            for (var i = 0; i < 9; i++) {
                 wrapPanel.Children.Add(new Button {Content = i.ToString(), Width = ButtonSize, Height = ButtonSize});
             }
 
-            foreach (Button button in wrapPanel.Children)
-            {
+            foreach (Button button in wrapPanel.Children) {
                 button.Click += Button_Click;
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
+        private void Button_Click(object sender, RoutedEventArgs e) {
             var button = sender as Button;
-            if (button == null)
-            {
+            if (button == null) {
                 return;
             }
 
-            keybd_event((byte)button.Content.ToString().ToCharArray()[0], 0, 0, UIntPtr.Zero);
+            var chars = button.Content.ToString().ToCharArray();
+            if (chars.Length == 0) {
+                return;
+            }
+
+            keybd_event((byte) chars[0], 0, 0, UIntPtr.Zero);
         }
 
-        protected override void OnSourceInitialized(EventArgs e)
-        {
+        protected override void OnSourceInitialized(EventArgs e) {
             base.OnSourceInitialized(e);
 
             var interopHelper = new WindowInteropHelper(this);
